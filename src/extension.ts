@@ -3,11 +3,11 @@ import { changeCaseCommands, COMMANDS, runCommand } from './commands'
 
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
-    vscode.commands.registerCommand('extension.changeCase.commands', changeCaseCommands)
+    vscode.commands.registerCommand('vscodium-change-case.commands', changeCaseCommands)
   )
   for (const command of COMMANDS) {
     context.subscriptions.push(
-      vscode.commands.registerCommand(`extension.changeCase.${command.id}`, async () =>
+      vscode.commands.registerCommand(`vscodium-change-case.${command.id}`, async () =>
         runCommand(command.id)
       )
     )

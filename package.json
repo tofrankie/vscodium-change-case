@@ -53,111 +53,111 @@
   "contributes": {
     "commands": [
       {
-        "command": "extension.changeCase.commands",
+        "command": "vscodium-change-case.commands",
         "title": "Change Case commands"
       },
       {
-        "command": "extension.changeCase.camel",
+        "command": "vscodium-change-case.camel",
         "title": "Change Case camel"
       },
       {
-        "command": "extension.changeCase.constant",
+        "command": "vscodium-change-case.constant",
         "title": "Change Case constant"
       },
       {
-        "command": "extension.changeCase.dot",
+        "command": "vscodium-change-case.dot",
         "title": "Change Case dot"
       },
       {
-        "command": "extension.changeCase.kebab",
+        "command": "vscodium-change-case.kebab",
         "title": "Change Case kebab"
       },
       {
-        "command": "extension.changeCase.lower",
+        "command": "vscodium-change-case.lower",
         "title": "Change Case lower"
       },
       {
-        "command": "extension.changeCase.lowerFirst",
+        "command": "vscodium-change-case.lowerFirst",
         "title": "Change Case lowerFirst"
       },
       {
-        "command": "extension.changeCase.no",
+        "command": "vscodium-change-case.no",
         "title": "Change Case no"
       },
       {
-        "command": "extension.changeCase.param",
+        "command": "vscodium-change-case.param",
         "title": "Change Case param"
       },
       {
-        "command": "extension.changeCase.pascal",
+        "command": "vscodium-change-case.pascal",
         "title": "Change Case pascal"
       },
       {
-        "command": "extension.changeCase.path",
+        "command": "vscodium-change-case.path",
         "title": "Change Case path"
       },
       {
-        "command": "extension.changeCase.sentence",
+        "command": "vscodium-change-case.sentence",
         "title": "Change Case sentence"
       },
       {
-        "command": "extension.changeCase.snake",
+        "command": "vscodium-change-case.snake",
         "title": "Change Case snake"
       },
       {
-        "command": "extension.changeCase.spongebob",
+        "command": "vscodium-change-case.spongebob",
         "title": "Change Case spongebob"
       },
       {
-        "command": "extension.changeCase.swap",
+        "command": "vscodium-change-case.swap",
         "title": "Change Case swap"
       },
       {
-        "command": "extension.changeCase.title",
+        "command": "vscodium-change-case.title",
         "title": "Change Case title"
       },
       {
-        "command": "extension.changeCase.upper",
+        "command": "vscodium-change-case.upper",
         "title": "Change Case upper"
       },
       {
-        "command": "extension.changeCase.upperFirst",
+        "command": "vscodium-change-case.upperFirst",
         "title": "Change Case upperFirst"
       }
     ],
     "submenus": [
       {
-        "id": "extension.changeCase.submenu",
+        "id": "vscodium-change-case.submenu",
         "label": "Change Case"
       }
     ],
     "menus": {
       "editor/context": [
         {
-          "submenu": "extension.changeCase.submenu",
+          "submenu": "vscodium-change-case.submenu",
           "when": "editorHasSelection",
           "group": "navigation"
         }
       ],
-      "extension.changeCase.submenu": [
+      "vscodium-change-case.submenu": [
         {
-          "command": "extension.changeCase.camel",
+          "command": "vscodium-change-case.camel",
           "group": "change_case@0"
         },
         {
-          "command": "extension.changeCase.kebab",
+          "command": "vscodium-change-case.kebab",
           "group": "change_case@1"
         },
         {
-          "command": "extension.changeCase.snake",
+          "command": "vscodium-change-case.snake",
           "group": "change_case@2"
         },
         {
-          "command": "extension.changeCase.constant",
+          "command": "vscodium-change-case.constant",
           "group": "change_case@3"
         },
         {
-          "command": "extension.changeCase.commands",
+          "command": "vscodium-change-case.commands",
           "group": "change_case@4"
         }
       ]
