@@ -1,116 +1,112 @@
 import * as vscode from 'vscode'
 import { EOL } from 'os'
 import * as changeCase from 'change-case'
-import { uniq } from 'lodash-es'
 import { titleCase } from 'title-case'
 import { swapCase } from 'swap-case'
 
-export const COMMAND_LABELS = {
-  CAMEL: 'camel',
-  CONSTANT: 'constant',
-  DOT: 'dot',
-  KEBAB: 'kebab',
-  LOWER: 'lower',
-  LOWER_FIRST: 'lowerFirst',
-  NO: 'no',
-  PARAM: 'param',
-  PASCAL: 'pascal',
-  PATH: 'path',
-  SENTENCE: 'sentence',
-  SNAKE: 'snake',
-  SWAP: 'swap',
-  TITLE: 'title',
-  UPPER: 'upper',
-  UPPER_FIRST: 'upperFirst',
-}
-
-const COMMAND_DEFINITIONS = [
+export const COMMANDS = [
   {
-    label: COMMAND_LABELS.CAMEL,
+    id: 'camel',
+    label: 'camel',
     description:
       'Convert to a string with the separators denoted by having the next letter capitalised',
     func: changeCase.camelCase,
   },
   {
-    label: COMMAND_LABELS.CONSTANT,
+    id: 'constant',
+    label: 'constant',
     description: 'Convert to an upper case, underscore separated string',
     func: changeCase.constantCase,
   },
   {
-    label: COMMAND_LABELS.DOT,
+    id: 'dot',
+    label: 'dot',
     description: 'Convert to a lower case, period separated string',
     func: changeCase.dotCase,
   },
   {
-    label: COMMAND_LABELS.KEBAB,
+    id: 'kebab',
+    label: 'kebab',
     description: 'Convert to a lower case, dash separated string (alias for param case)',
     func: changeCase.kebabCase,
   },
   {
-    label: COMMAND_LABELS.LOWER,
+    id: 'lower',
+    label: 'lower',
     description: 'Convert to a string in lower case',
     func: (str: string) => str.toLocaleLowerCase(),
   },
   {
-    label: COMMAND_LABELS.LOWER_FIRST,
+    id: 'lowerFirst',
+    label: 'lowerFirst',
     description: 'Convert to a string with the first character lower cased',
     func: (str: string) => str.charAt(0).toLocaleLowerCase() + str.slice(1),
   },
   {
-    label: COMMAND_LABELS.NO,
+    id: 'no',
+    label: 'no',
     description: 'Convert the string without any casing (lower case, space separated)',
     func: changeCase.noCase,
   },
   {
-    label: COMMAND_LABELS.PARAM,
+    id: 'param',
+    label: 'param',
     description: 'Convert to a lower case, dash separated string',
     func: changeCase.kebabCase,
   },
   {
-    label: COMMAND_LABELS.PASCAL,
+    id: 'pascal',
+    label: 'pascal',
     description:
       'Convert to a string denoted in the same fashion as camelCase, but with the first letter also capitalised',
     func: changeCase.pascalCase,
   },
   {
-    label: COMMAND_LABELS.PATH,
+    id: 'path',
+    label: 'path',
     description: 'Convert to a lower case, slash separated string',
     func: changeCase.pathCase,
   },
   {
-    label: COMMAND_LABELS.SENTENCE,
+    id: 'sentence',
+    label: 'sentence',
     description: 'Convert to a lower case, space separated string',
     func: changeCase.sentenceCase,
   },
   {
-    label: COMMAND_LABELS.SNAKE,
+    id: 'snake',
+    label: 'snake',
     description: 'Convert to a lower case, underscore separated string',
     func: changeCase.snakeCase,
   },
   {
-    label: COMMAND_LABELS.SWAP,
+    id: 'swap',
+    label: 'swap',
     description: 'Convert to a string with every character case reversed',
     func: swapCase,
   },
   {
-    label: COMMAND_LABELS.TITLE,
+    id: 'title',
+    label: 'title',
     description:
       'Convert to a space separated string with the first character of every word upper cased',
     func: titleCase,
   },
   {
-    label: COMMAND_LABELS.UPPER,
+    id: 'upper',
+    label: 'upper',
     description: 'Convert to a string in upper case',
     func: (str: string) => str.toLocaleUpperCase(),
   },
   {
-    label: COMMAND_LABELS.UPPER_FIRST,
+    id: 'upperFirst',
+    label: 'upperFirst',
     description: 'Convert to a string with the first character upper cased',
     func: (str: string) => str.charAt(0).toLocaleUpperCase() + str.slice(1),
   },
-]
+] as const
 
-export function changeCaseCommands() {
+export async function changeCaseCommands() {
   const firstSelectedText = getSelectedTextIfOnlyOneSelection()
   const opts: vscode.QuickPickOptions = {
     matchOnDescription: true,
@@ -118,105 +114,119 @@ export function changeCaseCommands() {
   }
 
   // if there's only one selection, show a preview of what it will look like after conversion in the QuickPickOptions,
-  // otherwise use the description used in COMMAND_DEFINITIONS
-  const items: vscode.QuickPickItem[] = COMMAND_DEFINITIONS.map(c => ({
+  // otherwise use the description used in COMMANDS
+  const items: vscode.QuickPickItem[] = COMMANDS.map(c => ({
     label: c.label,
     description: firstSelectedText ? `Convert to ${c.func(firstSelectedText)}` : c.description,
   }))
 
-  vscode.window.showQuickPick(items).then(command => runCommand(command.label))
+  const command = await vscode.window.showQuickPick(items, opts)
+  if (command) {
+    await runCommand(command.label)
+  }
 }
 
-export function runCommand(commandLabel: string) {
-  const commandDefinition = COMMAND_DEFINITIONS.filter(c => c.label === commandLabel)[0]
+export async function runCommand(commandIdOrLabel: string) {
+  const commandDefinition = COMMANDS.find(
+    c => c.id === commandIdOrLabel || c.label === commandIdOrLabel
+  )
   if (!commandDefinition) return
 
   const editor = vscode.window.activeTextEditor
+  if (!editor) return
   const { document, selections } = editor
 
-  let replacementActions = []
+  let replacementActions: {
+    text: string | undefined
+    range: vscode.Range
+    replacement: string | undefined
+    offset: number | undefined
+    newRange: vscode.Range
+  }[] = []
 
-  editor
-    .edit(editBuilder => {
-      replacementActions = selections.map(selection => {
-        const { text, range } = getSelectedText(selection, document)
-
-        let replacement
-        let offset
-
-        if (selection.isSingleLine) {
-          replacement = commandDefinition.func(text)
-
-          // it's possible that the replacement string is shorter or longer than the original,
-          // so calculate the offsets and new selection coordinates appropriately
-          offset = replacement.length - text.length
-        } else {
-          const lines = document.getText(range).split(EOL)
-
-          const replacementLines = lines.map(x => commandDefinition.func(x))
-          replacement = replacementLines.reduce((acc, v) => (!acc ? '' : acc + EOL) + v, undefined)
-          offset =
-            replacementLines[replacementLines.length - 1].length - lines[lines.length - 1].length
-        }
-
+  const success = await editor.edit(editBuilder => {
+    replacementActions = selections.map(selection => {
+      const { text, range } = getSelectedText(selection, document)
+      if (!text || !range)
         return {
           text,
-          range,
-          replacement,
-          offset,
-          newRange: isRangeSimplyCursorPosition(range)
-            ? range
-            : new vscode.Range(
-                range.start.line,
-                range.start.character,
-                range.end.line,
-                range.end.character + offset
-              ),
+          range: range || selection,
+          replacement: undefined,
+          offset: 0,
+          newRange: range || selection,
         }
-      })
 
-      replacementActions
-        .filter(x => x.replacement !== x.text)
-        .forEach(x => {
-          editBuilder.replace(x.range, x.replacement)
-        })
+      let replacement
+      let offset = 0
+
+      if (selection.isSingleLine) {
+        replacement = commandDefinition.func(text)
+
+        // it's possible that the replacement string is shorter or longer than the original,
+        // so calculate the offsets and new selection coordinates appropriately
+        offset = replacement.length - text.length
+      } else {
+        const lines = document.getText(range).split(EOL)
+        const replacementLines = lines.map(x => commandDefinition.func(x))
+        replacement = replacementLines.join(EOL) // simpler than reduce
+        offset =
+          replacementLines[replacementLines.length - 1].length - lines[lines.length - 1].length
+      }
+
+      const newRange = isRangeSimplyCursorPosition(range)
+        ? range
+        : new vscode.Range(
+            range.start.line,
+            range.start.character,
+            range.end.line,
+            range.end.character + offset
+          )
+
+      return { text, range, replacement, offset, newRange }
     })
-    .then(() => {
-      const sortedActions = replacementActions.sort((a, b) =>
-        compareByEndPosition(a.newRange, b.newRange)
-      )
 
-      // in order to maintain the selections based on possible new replacement lengths, calculate the new
-      // range coordinates, taking into account possible edits earlier in the line
-      const lineRunningOffsets = uniq(sortedActions.map(s => s.range.end.line)).map(lineNumber => ({
+    replacementActions
+      .filter(x => x && x.replacement !== undefined && x.replacement !== x.text)
+      .forEach(x => {
+        editBuilder.replace(x.range, x.replacement!)
+      })
+  })
+
+  if (success) {
+    const sortedActions = replacementActions
+      .filter(x => x.range)
+      .sort((a, b) => compareByEndPosition(a.newRange, b.newRange))
+
+    const lineRunningOffsets = Array.from(new Set(sortedActions.map(s => s.range.end.line))).map(
+      lineNumber => ({
         lineNumber,
         runningOffset: 0,
-      }))
-
-      const adjustedSelectionCoordinateList = sortedActions.map(s => {
-        const lineRunningOffset = lineRunningOffsets.filter(
-          lro => lro.lineNumber === s.range.end.line
-        )[0]
-        const range = new vscode.Range(
-          s.newRange.start.line,
-          s.newRange.start.character + lineRunningOffset.runningOffset,
-          s.newRange.end.line,
-          s.newRange.end.character + lineRunningOffset.runningOffset
-        )
-        lineRunningOffset.runningOffset += s.offset
-        return range
       })
+    )
 
-      // now finally set the newly created selections
-      editor.selections = adjustedSelectionCoordinateList.map(r => toSelection(r))
+    const adjustedSelectionCoordinateList = sortedActions.map(s => {
+      const lineRunningOffset = lineRunningOffsets.find(lro => lro.lineNumber === s.range.end.line)
+      if (!lineRunningOffset) return s.newRange
+
+      const range = new vscode.Range(
+        s.newRange.start.line,
+        s.newRange.start.character + lineRunningOffset.runningOffset,
+        s.newRange.end.line,
+        s.newRange.end.character + lineRunningOffset.runningOffset
+      )
+      lineRunningOffset.runningOffset += s.offset || 0
+      return range
     })
+
+    editor.selections = adjustedSelectionCoordinateList.map(r => toSelection(r))
+  }
 }
 
-function getSelectedTextIfOnlyOneSelection(): string {
+function getSelectedTextIfOnlyOneSelection(): string | undefined {
   const editor = vscode.window.activeTextEditor
+  if (!editor) return undefined
   const { document, selection, selections } = editor
 
-  // check if there's only one selection or if the selection spans multiple lines
   if (selections.length > 1 || selection.start.line !== selection.end.line) return undefined
 
   return getSelectedText(selections[0], document).text
@@ -225,8 +235,8 @@ function getSelectedTextIfOnlyOneSelection(): string {
 function getSelectedText(
   selection: vscode.Selection,
   document: vscode.TextDocument
-): { text: string; range: vscode.Range } {
-  let range: vscode.Range
+): { text: string | undefined; range: vscode.Range } {
+  let range: vscode.Range | undefined
 
   if (isRangeSimplyCursorPosition(selection)) {
     range = getChangeCaseWordRangeAtPosition(document, selection.end)
@@ -236,18 +246,17 @@ function getSelectedText(
 
   return {
     text: range ? document.getText(range) : undefined,
-    range,
+    range: range || selection,
   }
 }
 
 const CHANGE_CASE_WORD_CHARACTER_REGEX = /([\w_\.\-\/$]+)/
 const CHANGE_CASE_WORD_CHARACTER_REGEX_WITHOUT_DOT = /([\w_\-\/$]+)/
 
-// Change Case has a special definition of a word: it can contain special characters like dots, dashes and slashes
 function getChangeCaseWordRangeAtPosition(
   document: vscode.TextDocument,
   position: vscode.Position
-) {
+): vscode.Range | undefined {
   const configuration = vscode.workspace.getConfiguration('changeCase')
   const includeDotInCurrentWord = configuration
     ? configuration.get('includeDotInCurrentWord', false)
@@ -259,36 +268,20 @@ function getChangeCaseWordRangeAtPosition(
   const range = document.getWordRangeAtPosition(position)
   if (!range) return undefined
 
+  const lineText = document.lineAt(range.start.line).text
+
   let startCharacterIndex = range.start.character - 1
   while (startCharacterIndex >= 0) {
-    const charRange = new vscode.Range(
-      range.start.line,
-      startCharacterIndex,
-      range.start.line,
-      startCharacterIndex + 1
-    )
-    const character = document.getText(charRange)
-    if (character.search(regex) === -1) {
-      // no match
-      break
-    }
+    const character = lineText.charAt(startCharacterIndex)
+    if (character.search(regex) === -1) break
     startCharacterIndex--
   }
 
   const lineMaxColumn = document.lineAt(range.end.line).range.end.character
   let endCharacterIndex = range.end.character
   while (endCharacterIndex < lineMaxColumn) {
-    const charRange = new vscode.Range(
-      range.end.line,
-      endCharacterIndex,
-      range.end.line,
-      endCharacterIndex + 1
-    )
-    const character = document.getText(charRange)
-    if (character.search(regex) === -1) {
-      // no match
-      break
-    }
+    const character = lineText.charAt(endCharacterIndex)
+    if (character.search(regex) === -1) break
     endCharacterIndex++
   }
 

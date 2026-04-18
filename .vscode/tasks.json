@@ -9,7 +9,14 @@
       "command": "npm",
       "args": ["run", "dev", "--loglevel", "silent"],
       "isBackground": true,
-      "problemMatcher": "$tsc-watch",
+      "problemMatcher": {
+        "base": "$tsc-watch",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*$",
+          "endsPattern": "([Bb]uilt|[Ss]uccess|[Ff]inished|[Dd]one|[Ww]atching)"
+        }
+      },
       "group": {
         "kind": "build",
         "isDefault": false
