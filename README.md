@@ -28,7 +28,7 @@ Install from [Visual Studio Marketplace](https://marketplace.visualstudio.com/it
 
 | Command ID                        | Title                  | Description                                                                                               |
 | :-------------------------------- | :--------------------- | :-------------------------------------------------------------------------------------------------------- |
-| `extension.changeCase.commands`   | Change Case Commands   | List all Change Case commands, with preview if only one word is selected.                                 |
+| `extension.changeCase.commands`   | Change Case commands   | List all Change Case commands, with preview if only one word is selected.                                 |
 | `extension.changeCase.camel`      | Change Case camel      | Convert to a string with the separators denoted by having the next letter capitalised.                    |
 | `extension.changeCase.constant`   | Change Case constant   | Convert to an upper case, underscore separated string.                                                    |
 | `extension.changeCase.dot`        | Change Case dot        | Convert to a lower case, period separated string.                                                         |

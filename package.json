@@ -54,7 +54,7 @@
     "commands": [
       {
         "command": "extension.changeCase.commands",
-        "title": "Change Case Commands"
+        "title": "Change Case commands"
       },
       {
         "command": "extension.changeCase.camel",
@@ -124,7 +124,44 @@
         "command": "extension.changeCase.upperFirst",
         "title": "Change Case upperFirst"
       }
-    ]
+    ],
+    "submenus": [
+      {
+        "id": "extension.changeCase.submenu",
+        "label": "Change Case"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "submenu": "extension.changeCase.submenu",
+          "when": "editorHasSelection",
+          "group": "navigation"
+        }
+      ],
+      "extension.changeCase.submenu": [
+        {
+          "command": "extension.changeCase.camel",
+          "group": "change_case@0"
+        },
+        {
+          "command": "extension.changeCase.kebab",
+          "group": "change_case@1"
+        },
+        {
+          "command": "extension.changeCase.snake",
+          "group": "change_case@2"
+        },
+        {
+          "command": "extension.changeCase.constant",
+          "group": "change_case@3"
+        },
+        {
+          "command": "extension.changeCase.commands",
+          "group": "change_case@4"
+        }
+      ]
+    }
   },
   "configuration": {
     "type": "object",

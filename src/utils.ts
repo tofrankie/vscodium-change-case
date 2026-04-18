@@ -1,6 +1,6 @@
 /**
  * SpongeBob-style alternating letter case.
- * Adapted from: https://github.com/jgarrow/spongebob-case/blob/b845b2cd5b9ff9712903a29d6bf80b7432e4fc3c/src/index.ts
+ * From: https://github.com/jgarrow/spongebob-case/blob/b845b2cd5b9ff9712903a29d6bf80b7432e4fc3c/src/index.ts
  */
 export function spongebobCase(str: string): string {
   const singleCharacter = /[a-z]/i // any letter
