@@ -1,8 +1,9 @@
 {
   "publisher": "frankie",
-  "name": "change-case",
+  "name": "vscodium-change-case",
   "displayName": "Change Case",
   "version": "1.0.0",
+  "packageManager": "pnpm@10.32.0",
   "description": "Quickly change the case (camelCase, CONSTANT_CASE, snake_case, etc) of the current selection or current word",
   "license": "MIT",
   "homepage": "https://github.com/tofrankie/vscode-change-case",

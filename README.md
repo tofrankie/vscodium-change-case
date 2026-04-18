@@ -1,7 +1,7 @@
 # Change Case Extension for Visual Studio Code
 
-[![Visual Studio Marketplace Version](https://vsmarketplacebadges.dev/version/frankie.change-case.svg?color=4d9375)
-](https://marketplace.visualstudio.com/items?itemName=frankie.change-case) [![Open VSX Version](https://img.shields.io/open-vsx/v/frankie/change-case.svg?label=Open%20VSX&color=a60ee5)](https://open-vsx.org/extension/frankie/change-case)
+[![Visual Studio Marketplace Version](https://vsmarketplacebadges.dev/version/frankie.vscodium-change-case.svg?color=4d9375)
+](https://marketplace.visualstudio.com/items?itemName=frankie.vscodium-change-case) [![Open VSX Version](https://img.shields.io/open-vsx/v/frankie/vscodium-change-case.svg?label=Open%20VSX&color=a60ee5)](https://open-vsx.org/extension/frankie/vscodium-change-case)
 
 > [!NOTE]
 > Fork of [wmaurer/vscode-change-case](https://github.com/wmaurer/vscode-change-case). Upstream is unmaintained; this repo updates dependencies and carries the project forward.
@@ -22,7 +22,7 @@ _Note:_ Please read the [documentation](https://code.visualstudio.com/Docs/edito
 
 ## Quick Start
 
-Install from [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=frankie.change-case) or [Open VSX](https://open-vsx.org/extension/frankie/change-case).
+Install from [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=frankie.vscodium-change-case) or [Open VSX](https://open-vsx.org/extension/frankie/vscodium-change-case).
 
 ## Commands
 
