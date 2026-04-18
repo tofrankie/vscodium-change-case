@@ -1,47 +1,46 @@
 {
   "name": "change-case",
+  "displayName": "Change Case",
   "description": "Quickly change the case (camelCase, CONSTANT_CASE, snake_case, etc) of the current selection or current word",
-  "icon": "images/change-case-icon.png",
-  "galleryBanner": {
-    "color": "#1e1e1e",
-    "theme": "dark"
-  },
+  "icon": "images/icon.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wmaurer/vscode-change-case.git"
+    "url": "git+https://github.com/tofrankie/vscode-change-case.git"
   },
+  "homepage": "https://github.com/tofrankie/vscode-change-case",
   "bugs": {
-    "url": "https://github.com/wmaurer/vscode-change-case/issues"
+    "url": "https://github.com/tofrankie/vscode-change-case/issues"
   },
   "license": "MIT",
   "version": "1.0.0",
-  "publisher": "wmaurer",
+  "publisher": "frankie",
   "engines": {
-    "vscode": "^1.6.0"
+    "vscode": "^1.88.0"
   },
   "categories": [
+    "Linters",
     "Other"
   ],
-  "activationEvents": [
-    "onCommand:extension.changeCase.commands",
-    "onCommand:extension.changeCase.camel",
-    "onCommand:extension.changeCase.constant",
-    "onCommand:extension.changeCase.dot",
-    "onCommand:extension.changeCase.kebab",
-    "onCommand:extension.changeCase.lower",
-    "onCommand:extension.changeCase.lowerFirst",
-    "onCommand:extension.changeCase.no",
-    "onCommand:extension.changeCase.param",
-    "onCommand:extension.changeCase.pascal",
-    "onCommand:extension.changeCase.path",
-    "onCommand:extension.changeCase.sentence",
-    "onCommand:extension.changeCase.snake",
-    "onCommand:extension.changeCase.swap",
-    "onCommand:extension.changeCase.title",
-    "onCommand:extension.changeCase.upper",
-    "onCommand:extension.changeCase.upperFirst"
+  "keywords": [
+    "change case",
+    "camel case",
+    "constant case",
+    "dot case",
+    "kebab case",
+    "lower case",
+    "lower first",
+    "no case",
+    "param case",
+    "pascal case",
+    "path case",
+    "sentence case",
+    "snake case",
+    "swap case",
+    "title case",
+    "upper case",
+    "upper first"
   ],
-  "main": "./out/src/extension",
+  "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
@@ -126,20 +125,25 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "tsc -p ./",
-    "compile": "tsc -watch -p ./",
-    "postinstall": "node ./node_modules/vscode/bin/install"
+    "dev": "tsc -watch",
+    "build": "tsc",
+    "prepackage": "pnpm build",
+    "package": "vsce package"
   },
   "devDependencies": {
-    "@types/mocha": "^2.2.32",
-    "@types/node": "^6.0.46",
-    "mocha": "^2.3.3",
-    "typescript": "^2.0.6",
-    "vscode": "^1.0.3"
+    "@types/lodash-es": "^4.17.12",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^25.6.0",
+    "@types/vscode": "1.88.0",
+    "@vscode/vsce": "^3.9.1",
+    "mocha": "^11.7.5",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
-    "change-case": "^3.0.0",
-    "lodash.range": "^3.1.1",
-    "lodash.uniq": "^4.1.0"
+    "change-case": "^5.4.4",
+    "lodash-es": "^4.18.1",
+    "swap-case": "^3.0.3",
+    "title-case": "^4.3.2",
+    "upper-case": "^3.0.0"
   }
 }

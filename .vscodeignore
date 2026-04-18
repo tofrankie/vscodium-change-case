@@ -1,8 +1,5 @@
 .vscode/**
-typings/**
-out/test/**
-test/**
-**/*.ts
-**/*.map
+src/**
 .gitignore
+pnpm-lock.yaml
 tsconfig.json
